@@ -1,0 +1,268 @@
+Tables Accessed:
+ADVERTISER_DIM
+DATACENTER_METRICS_HOURLY_FACT
+DATE_DIM
+OX_RTB_DATA_DAILY_FACT
+OX_TRANSACTION_SUM_DAILY_FACT
+
+
+SQL Statements:
+CREATE TABLE MSTR_TMP.ZZMD00 AS 
+select	a11.utc_date_sid  date_sid,
+	case when a11.p_mkt_op is null then ' ' else a11.p_mkt_op end   p_mkt_op,
+	case when upper(a11.COUNTRY_CODE) in ('RO','PL','SI','BG','SK','CZ','HR','AT','FI','BE','LT','NL','CY','FR','GR','IT','SE','PT','HU','DK','DE','ES','GB','IE','EE','LU','MT','LV') then 'GDPR' else 'Non-GDPR' end  CustCol_70,
+	a11.facility  facility,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.U_MOBL_DEV_CAT='desktop' then 'desktop' when a11.U_MOBL_DEV_CAT in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end  U_MOBL_DEV_CAT,
+	a11.advertiser_account_nk  advertiser_account_nk,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when upper(a11.COUNTRY_CODE)='US' then 'US' 
+when upper(a11.COUNTRY_CODE)='GB' then 'United Kingdom'
+when upper(a11.COUNTRY_CODE)='JP' then 'Japan'
+when upper(a11.COUNTRY_CODE)='CA' then 'Canada'
+when upper(a11.COUNTRY_CODE)='DE' then 'Germany'
+when upper(a11.COUNTRY_CODE)='AU' then 'Australia'
+when upper(a11.COUNTRY_CODE)='IT' then 'Italy'
+when upper(a11.COUNTRY_CODE)='NL' then 'Netherlands'
+when upper(a11.COUNTRY_CODE)='MX' then 'Mexico'
+when upper(a11.COUNTRY_CODE)='ES' then 'Spain'
+when upper(a11.COUNTRY_CODE)='FR' then 'France'
+else 'ROW' end  CustCol_700,
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' else  cast(a11.X_BIDDER_ELIG as varchar(10)) end  x_bidder_elig,
+	COALESCE(sum(a11.tot_spend_usd), 0)  WJXBFS1,
+	sum(a11.tot_impressions_paid)  WJXBFS2,
+	sum(a11.tot_bids_received)  WJXBFS3,
+	sum(a11.tot_ssrtb_timeouts)  WJXBFS4,
+	sum(a11.tot_rtb_data_sends)  WJXBFS5,
+	COALESCE(sum(a11.tot_bids_received_valid), 0)  WJXBFS6,
+	sum(a11.tot_bids_discarded_aq_ecrid)  WJXBFS7,
+	sum(a11.tot_ssrtb_nonzero_multi_above_bids)  WJXBFS8,
+	sum(a11.tot_bids_received_valid)  WJXBFS9,
+	sum(a11.tot_lost_floor)  WJXBFSa,
+	sum(a11.tot_ssrtb_requests)  WJXBFSb,
+	sum(a11.tot_tx_rounds)  WJXBFSc,
+	sum(a11.tot_bids_discarded_aq_language)  WJXBFSd,
+	sum(a11.tot_ssrtb_throttled)  WJXBFSe,
+	sum(a11.tot_ssrtb_nonzero_multi_bids)  WJXBFSf,
+	COALESCE(sum(a11.tot_bids_discarded_brand_5z_adserver), 0)  WJXBFS10,
+	sum(a11.tot_ssrtb_nonzero_single_bids)  WJXBFS11,
+	sum(a11.tot_ssrtb_empty)  WJXBFS12,
+	sum(a11.tot_bids_discarded_brand_5z_malicious)  WJXBFS13,
+	sum(a11.tot_sum_win_bid_value_billable_usd)  WJXBFS14,
+	sum(a11.tot_bids_discarded_unbranded)  WJXBFS15,
+	sum(a11.tot_bids_discarded)  WJXBFS16,
+	sum(a11.tot_wins)  WJXBFS17,
+	sum(a11.tot_bids_discarded_brand_5z_adserver)  WJXBFS18,
+	sum(a11.tot_bids_discarded_brand_5z_video)  WJXBFS19,
+	sum(a11.tot_bids_discarded_brand_5z_generic)  WJXBFS1a,
+	sum(a11.tot_bids_discarded_aq_category)  WJXBFS1b,
+	sum(a11.tot_total_bids_usd)  WJXBFS1c,
+	sum(a11.tot_solicit_rounds)  WJXBFS1d,
+	sum(a11.tot_ssrtb_nonzero_single_above_bids)  WJXBFS1e,
+	sum(a11.tot_bids_discarded_aq_crid)  WJXBFS1f,
+	sum(a11.tot_bids_discarded_aq_attribute)  WJXBFS20,
+	sum(a11.tot_ssrtb_error)  WJXBFS21,
+	sum(a11.tot_bids_discarded_aq_brand)  WJXBFS22,
+	sum(a11.tot_lost_competition)  WJXBFS23,
+	sum(a11.tot_bids_discarded_aq_type)  WJXBFS24,
+	sum(a11.tot_bids_discarded_brand)  WJXBFS25
+from	"mstr_datamart"."OX_RTB_DATA_DAILY_FACT"	a11
+where	a11.utc_date_sid > 20200712
+group by	a11.utc_date_sid,
+	case when a11.p_mkt_op is null then ' ' else a11.p_mkt_op end ,
+	case when upper(a11.COUNTRY_CODE) in ('RO','PL','SI','BG','SK','CZ','HR','AT','FI','BE','LT','NL','CY','FR','GR','IT','SE','PT','HU','DK','DE','ES','GB','IE','EE','LU','MT','LV') then 'GDPR' else 'Non-GDPR' end,
+	a11.facility,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.U_MOBL_DEV_CAT='desktop' then 'desktop' when a11.U_MOBL_DEV_CAT in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end,
+	a11.advertiser_account_nk,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when upper(a11.COUNTRY_CODE)='US' then 'US' 
+when upper(a11.COUNTRY_CODE)='GB' then 'United Kingdom'
+when upper(a11.COUNTRY_CODE)='JP' then 'Japan'
+when upper(a11.COUNTRY_CODE)='CA' then 'Canada'
+when upper(a11.COUNTRY_CODE)='DE' then 'Germany'
+when upper(a11.COUNTRY_CODE)='AU' then 'Australia'
+when upper(a11.COUNTRY_CODE)='IT' then 'Italy'
+when upper(a11.COUNTRY_CODE)='NL' then 'Netherlands'
+when upper(a11.COUNTRY_CODE)='MX' then 'Mexico'
+when upper(a11.COUNTRY_CODE)='ES' then 'Spain'
+when upper(a11.COUNTRY_CODE)='FR' then 'France'
+else 'ROW' end,
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' else  cast(a11.X_BIDDER_ELIG as varchar(10)) end
+
+CREATE TABLE MSTR_TMP.ZZMD01 AS 
+select	a11.utc_date_sid  date_sid,
+	a11.facility  facility,
+	sum(a11.TOT_MKT_ELIG_REQ)  WJXBFS1
+from	"mstr_datamart"."DATACENTER_METRICS_HOURLY_FACT"	a11
+where	a11.utc_date_sid > 20200712
+group by	a11.utc_date_sid,
+	a11.facility
+
+CREATE TABLE MSTR_TMP.ZZMD02 AS 
+select	a11.utc_date_sid  date_sid,
+	case when a11.p_mkt_op is null then ' ' else a11.p_mkt_op end   p_mkt_op,
+	case when upper(a11.COUNTRY_CODE) in ('RO','PL','SI','BG','SK','CZ','HR','AT','FI','BE','LT','NL','CY','FR','GR','IT','SE','PT','HU','DK','DE','ES','GB','IE','EE','LU','MT','LV') then 'GDPR' else 'Non-GDPR' end  CustCol_70,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.u_mobl_dev_cat='desktop' then 'desktop' when a11.u_mobl_dev_cat in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end  U_MOBL_DEV_CAT,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when upper(a11.COUNTRY_CODE)='US' then 'US' 
+when upper(a11.COUNTRY_CODE)='GB' then 'United Kingdom'
+when upper(a11.COUNTRY_CODE)='JP' then 'Japan'
+when upper(a11.COUNTRY_CODE)='CA' then 'Canada'
+when upper(a11.COUNTRY_CODE)='DE' then 'Germany'
+when upper(a11.COUNTRY_CODE)='AU' then 'Australia'
+when upper(a11.COUNTRY_CODE)='IT' then 'Italy'
+when upper(a11.COUNTRY_CODE)='NL' then 'Netherlands'
+when upper(a11.COUNTRY_CODE)='MX' then 'Mexico'
+when upper(a11.COUNTRY_CODE)='ES' then 'Spain'
+when upper(a11.COUNTRY_CODE)='FR' then 'France'
+else 'ROW' end  CustCol_700,
+	case when a11.x_bidder_elig = 1 then 'true' when a11.x_bidder_elig = 0 then 'false' else  cast(a11.x_bidder_elig as varchar(10)) end  x_bidder_elig,
+	sum(a11.tot_mkt_req)  WJXBFS1
+from	"mstr_datamart"."OX_TRANSACTION_SUM_DAILY_FACT"	a11
+where	a11.utc_date_sid > 20200712
+group by	a11.utc_date_sid,
+	case when a11.p_mkt_op is null then ' ' else a11.p_mkt_op end ,
+	case when upper(a11.COUNTRY_CODE) in ('RO','PL','SI','BG','SK','CZ','HR','AT','FI','BE','LT','NL','CY','FR','GR','IT','SE','PT','HU','DK','DE','ES','GB','IE','EE','LU','MT','LV') then 'GDPR' else 'Non-GDPR' end,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.u_mobl_dev_cat='desktop' then 'desktop' when a11.u_mobl_dev_cat in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when upper(a11.COUNTRY_CODE)='US' then 'US' 
+when upper(a11.COUNTRY_CODE)='GB' then 'United Kingdom'
+when upper(a11.COUNTRY_CODE)='JP' then 'Japan'
+when upper(a11.COUNTRY_CODE)='CA' then 'Canada'
+when upper(a11.COUNTRY_CODE)='DE' then 'Germany'
+when upper(a11.COUNTRY_CODE)='AU' then 'Australia'
+when upper(a11.COUNTRY_CODE)='IT' then 'Italy'
+when upper(a11.COUNTRY_CODE)='NL' then 'Netherlands'
+when upper(a11.COUNTRY_CODE)='MX' then 'Mexico'
+when upper(a11.COUNTRY_CODE)='ES' then 'Spain'
+when upper(a11.COUNTRY_CODE)='FR' then 'France'
+else 'ROW' end,
+	case when a11.x_bidder_elig = 1 then 'true' when a11.x_bidder_elig = 0 then 'false' else  cast(a11.x_bidder_elig as varchar(10)) end
+
+CREATE TABLE MSTR_TMP.ZZMD03 AS 
+select	a11.utc_date_sid  date_sid,
+	case when a11.p_mkt_op is null then ' ' else a11.p_mkt_op end   p_mkt_op,
+	case when upper(a11.COUNTRY_CODE) in ('RO','PL','SI','BG','SK','CZ','HR','AT','FI','BE','LT','NL','CY','FR','GR','IT','SE','PT','HU','DK','DE','ES','GB','IE','EE','LU','MT','LV') then 'GDPR' else 'Non-GDPR' end  CustCol_70,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.U_MOBL_DEV_CAT='desktop' then 'desktop' when a11.U_MOBL_DEV_CAT in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end  U_MOBL_DEV_CAT,
+	a11.advertiser_account_nk  advertiser_account_nk,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when upper(a11.COUNTRY_CODE)='US' then 'US' 
+when upper(a11.COUNTRY_CODE)='GB' then 'United Kingdom'
+when upper(a11.COUNTRY_CODE)='JP' then 'Japan'
+when upper(a11.COUNTRY_CODE)='CA' then 'Canada'
+when upper(a11.COUNTRY_CODE)='DE' then 'Germany'
+when upper(a11.COUNTRY_CODE)='AU' then 'Australia'
+when upper(a11.COUNTRY_CODE)='IT' then 'Italy'
+when upper(a11.COUNTRY_CODE)='NL' then 'Netherlands'
+when upper(a11.COUNTRY_CODE)='MX' then 'Mexico'
+when upper(a11.COUNTRY_CODE)='ES' then 'Spain'
+when upper(a11.COUNTRY_CODE)='FR' then 'France'
+else 'ROW' end  CustCol_700,
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' else  cast(a11.X_BIDDER_ELIG as varchar(10)) end  x_bidder_elig,
+	sum(a11.tot_tx_rounds)  WJXBFS1
+from	"mstr_datamart"."OX_RTB_DATA_DAILY_FACT"	a11
+where	a11.utc_date_sid > 20200712
+group by	a11.utc_date_sid,
+	case when a11.p_mkt_op is null then ' ' else a11.p_mkt_op end ,
+	case when upper(a11.COUNTRY_CODE) in ('RO','PL','SI','BG','SK','CZ','HR','AT','FI','BE','LT','NL','CY','FR','GR','IT','SE','PT','HU','DK','DE','ES','GB','IE','EE','LU','MT','LV') then 'GDPR' else 'Non-GDPR' end,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.U_MOBL_DEV_CAT='desktop' then 'desktop' when a11.U_MOBL_DEV_CAT in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end,
+	a11.advertiser_account_nk,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when upper(a11.COUNTRY_CODE)='US' then 'US' 
+when upper(a11.COUNTRY_CODE)='GB' then 'United Kingdom'
+when upper(a11.COUNTRY_CODE)='JP' then 'Japan'
+when upper(a11.COUNTRY_CODE)='CA' then 'Canada'
+when upper(a11.COUNTRY_CODE)='DE' then 'Germany'
+when upper(a11.COUNTRY_CODE)='AU' then 'Australia'
+when upper(a11.COUNTRY_CODE)='IT' then 'Italy'
+when upper(a11.COUNTRY_CODE)='NL' then 'Netherlands'
+when upper(a11.COUNTRY_CODE)='MX' then 'Mexico'
+when upper(a11.COUNTRY_CODE)='ES' then 'Spain'
+when upper(a11.COUNTRY_CODE)='FR' then 'France'
+else 'ROW' end,
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' else  cast(a11.X_BIDDER_ELIG as varchar(10)) end
+
+select	pa11.date_sid  date_sid,
+	max(a16.DATE)  date_I,
+	pa11.advertiser_account_nk  advertiser_account_nk,
+	max(a15.advertiser_account_name)  advertiser_account_name,
+	pa11.U_MOBL_DEV_CAT  U_MOBL_DEV_CAT,
+	pa11.facility  facility,
+	pa11.CustCol_700  CustCol_70,
+	pa11.p_mkt_op  p_mkt_op,
+	pa11.x_bidder_elig  x_bidder_elig,
+	pa11.P_MAPPED_ADUNIT_TYPE  P_MAPPED_ADUNIT_TYPE,
+	pa11.CustCol_70  CustCol_700,
+	max(pa11.WJXBFS1)  WJXBFS1,
+	max(pa11.WJXBFS2)  WJXBFS2,
+	max(pa11.WJXBFS3)  WJXBFS3,
+	max(pa11.WJXBFS4)  WJXBFS4,
+	max(pa11.WJXBFS5)  WJXBFS5,
+	max(pa11.WJXBFS6)  WJXBFS6,
+	max(pa11.WJXBFS7)  WJXBFS7,
+	max(pa11.WJXBFS8)  WJXBFS8,
+	max(pa11.WJXBFS9)  WJXBFS9,
+	max(pa11.WJXBFSa)  WJXBFSa,
+	max(pa12.WJXBFS1)  WJXBFSb,
+	max(pa11.WJXBFSb)  WJXBFSc,
+	max(pa11.WJXBFSc)  WJXBFSd,
+	max(pa11.WJXBFSd)  WJXBFSe,
+	max(pa11.WJXBFSe)  WJXBFSf,
+	max(pa11.WJXBFSf)  WJXBFS10,
+	max(pa11.WJXBFS10)  WJXBFS11,
+	max(pa11.WJXBFS11)  WJXBFS12,
+	max(pa11.WJXBFS12)  WJXBFS13,
+	max(pa11.WJXBFS13)  WJXBFS14,
+	max(pa11.WJXBFS14)  WJXBFS15,
+	max(pa11.WJXBFS15)  WJXBFS16,
+	max(pa13.WJXBFS1)  WJXBFS17,
+	max(pa11.WJXBFS16)  WJXBFS18,
+	max(pa11.WJXBFS17)  WJXBFS19,
+	max(pa11.WJXBFS18)  WJXBFS1a,
+	max(pa11.WJXBFS19)  WJXBFS1b,
+	max(pa11.WJXBFS1a)  WJXBFS1c,
+	max(pa11.WJXBFS1b)  WJXBFS1d,
+	max(pa11.WJXBFS1c)  WJXBFS1e,
+	max(pa11.WJXBFS1d)  WJXBFS1f,
+	max(pa11.WJXBFS1e)  WJXBFS20,
+	max(pa14.WJXBFS1)  WJXBFS21,
+	max(pa11.WJXBFS1f)  WJXBFS22,
+	max(pa11.WJXBFS20)  WJXBFS23,
+	max(pa11.WJXBFS21)  WJXBFS24,
+	max(pa11.WJXBFS22)  WJXBFS25,
+	max(pa11.WJXBFS23)  WJXBFS26,
+	max(pa11.WJXBFS24)  WJXBFS27,
+	max(pa11.WJXBFS25)  WJXBFS28
+from	MSTR_TMP.ZZMD00	pa11
+	join	MSTR_TMP.ZZMD01	pa12
+	  on 	(pa11.date_sid = pa12.date_sid and 
+	pa11.facility = pa12.facility)
+	join	MSTR_TMP.ZZMD02	pa13
+	  on 	(pa11.CustCol_70 = pa13.CustCol_70 and 
+	pa11.CustCol_700 = pa13.CustCol_700 and 
+	pa11.P_MAPPED_ADUNIT_TYPE = pa13.P_MAPPED_ADUNIT_TYPE and 
+	pa11.U_MOBL_DEV_CAT = pa13.U_MOBL_DEV_CAT and 
+	pa11.date_sid = pa13.date_sid and 
+	pa11.p_mkt_op = pa13.p_mkt_op and 
+	pa11.x_bidder_elig = pa13.x_bidder_elig)
+	join	MSTR_TMP.ZZMD03	pa14
+	  on 	(pa11.CustCol_70 = pa14.CustCol_70 and 
+	pa11.CustCol_700 = pa14.CustCol_700 and 
+	pa11.P_MAPPED_ADUNIT_TYPE = pa14.P_MAPPED_ADUNIT_TYPE and 
+	pa11.U_MOBL_DEV_CAT = pa14.U_MOBL_DEV_CAT and 
+	pa11.advertiser_account_nk = pa14.advertiser_account_nk and 
+	pa11.date_sid = pa14.date_sid and 
+	pa11.p_mkt_op = pa14.p_mkt_op and 
+	pa11.x_bidder_elig = pa14.x_bidder_elig)
+	left outer join	"mstr_datamart"."ADVERTISER_DIM"	a15
+	  on 	(pa11.advertiser_account_nk = a15.advertiser_account_nk)
+	left outer join	"mstr_datamart"."DATE_DIM"	a16
+	  on 	(pa11.date_sid = a16.date_sid)
+group by	pa11.date_sid,
+	pa11.advertiser_account_nk,
+	pa11.U_MOBL_DEV_CAT,
+	pa11.facility,
+	pa11.CustCol_700,
+	pa11.p_mkt_op,
+	pa11.x_bidder_elig,
+	pa11.P_MAPPED_ADUNIT_TYPE,
+	pa11.CustCol_70

@@ -1,0 +1,161 @@
+Tables Accessed:
+ADVERTISER_DIM
+COUNTRY_DIM
+OX_RTB_DATA_HOURLY_FACT
+
+
+SQL Statements:
+select	a11.utc_timestamp  utc_timestamp,
+	a11.advertiser_account_nk  advertiser_account_nk,
+	max(a13.advertiser_account_name)  advertiser_account_name,
+	a11.a_coin  a_coin,
+	a11.advertiser_account_nk  advertiser_account_nk0,
+	nvl(a11.COUNTRY_CODE,'')  COUNTRY_CODE,
+	a12.COUNTRY_NAME  COUNTRY_NAME,
+	a11.facility  facility,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.U_MOBL_DEV_CAT='desktop' then 'desktop' when a11.U_MOBL_DEV_CAT in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end  U_MOBL_DEV_CAT,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	sum(a11.tot_bids_received)  WJXBFS1,
+	sum(a11.tot_spend_usd)  WJXBFS2,
+	sum(a11.tot_ssrtb_requests)  WJXBFS3,
+	sum(a11.tot_bids_discarded_aq_ecrid)  WJXBFS4,
+	sum(a11.tot_bids_discarded_mutual_exclusion)  WJXBFS5,
+	sum(a11.tot_bids_discarded_nurl_invalid)  WJXBFS6,
+	sum(a11.tot_bids_discarded_nurl_too_long)  WJXBFS7,
+	sum(a11.TOT_SPEND)  WJXBFS8,
+	sum(a11.tot_bids_discarded_brand)  WJXBFS9,
+	sum(a11.tot_bids_discarded_unbranded)  WJXBFSa,
+	sum(a11.tot_bids_discarded_selfcompete)  WJXBFSb,
+	sum(a11.tot_bids_discarded_domain)  WJXBFSc,
+	sum(a11.tot_bids_discarded_aq_type)  WJXBFSd,
+	sum(a11.tot_bids_discarded_aq_crid)  WJXBFSe,
+	sum(a11.tot_bids_discarded_aq_attribute)  WJXBFSf,
+	sum(a11.tot_bids_discarded_aq_category)  WJXBFS10,
+	sum(a11.tot_bids_discarded_aq_brand)  WJXBFS11,
+	sum(a11.tot_bids_discarded_aq_language)  WJXBFS12,
+	sum(a11.tot_bids_discarded_sslsafe)  WJXBFS13,
+	sum(a11.tot_bids_discarded_pmp_buyer)  WJXBFS14,
+	sum(a11.tot_bids_discarded_pmp_brand)  WJXBFS15,
+	sum(a11.tot_bids_discarded_bid_too_high)  WJXBFS16,
+	sum(a11.tot_impressions_paid)  WJXBFS17,
+	sum(a11.tot_bids_discarded_currency_conversion_failed)  WJXBFS18,
+	sum(a11.tot_bids_discarded_other)  WJXBFS19,
+	sum(a11.tot_wins)  WJXBFS1a,
+	sum(a11.tot_ssrtb_timeouts)  WJXBFS1b,
+	sum(a11.tot_rtb_data_sends)  WJXBFS1c,
+	sum(a11.tot_ssrtb_nonzero_multi_above_bids)  WJXBFS1d,
+	sum(a11.tot_ssrtb_throttled)  WJXBFS1e,
+	sum(a11.tot_ssrtb_nonzero_multi_bids)  WJXBFS1f,
+	sum(a11.tot_ssrtb_nonzero_single_bids)  WJXBFS20,
+	sum(a11.tot_ssrtb_empty)  WJXBFS21,
+	sum(a11.tot_bids_discarded_brand_5z_malicious)  WJXBFS22,
+	sum(a11.tot_total_bids)  WJXBFS23,
+	sum(a11.tot_bids_discarded_brand_5z_adserver)  WJXBFS24,
+	sum(a11.tot_winning_bids)  WJXBFS25,
+	sum(a11.tot_total_bids_usd)  WJXBFS26,
+	sum(a11.tot_bids_discarded_brand_5z_generic)  WJXBFS27,
+	sum(a11.tot_ssrtb_nonzero_single_above_bids)  WJXBFS28,
+	sum(a11.tot_ssrtb_error)  WJXBFS29,
+	sum(a11.tot_bids_discarded_brand_5z_video)  WJXBFS2a,
+	COALESCE(sum(a11.tot_spend_usd), 0)  WJXBFS2b,
+	sum(a11.tot_winning_bids_usd)  WJXBFS2c
+from	"mstr_datamart"."OX_RTB_DATA_HOURLY_FACT"	a11
+	left outer join	"mstr_datamart"."COUNTRY_DIM"	a12
+	  on 	(a11.COUNTRY_CODE = a12.COUNTRY_CODE and 
+	nvl(a11.COUNTRY_CODE,'') = a12.COUNTRY_CODE)
+	left outer join	"mstr_datamart"."ADVERTISER_DIM"	a13
+	  on 	(a11.advertiser_account_nk = a13.advertiser_account_nk)
+where	(a11.utc_timestamp between '2020-08-10 23:00:00' and '2020-08-11 10:00:00'
+ and a11.advertiser_account_nk in (537072452))
+group by	a11.utc_timestamp,
+	a11.advertiser_account_nk,
+	a11.a_coin,
+	a11.advertiser_account_nk,
+	nvl(a11.COUNTRY_CODE,''),
+	a12.COUNTRY_NAME,
+	a11.facility,
+	case when a11.is_mobile_app = true then 'mobile app' when a11.U_MOBL_DEV_CAT='desktop' then 'desktop' when a11.U_MOBL_DEV_CAT in ('mobile','tablet', 'text') then 'mobile web' else 'mobile web' end,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end
+
+
+[Analytical engine calculation steps:
+	1.  Calculate metric: <Total SSRTB Requests Sent (less throttled)> in the dataset
+	2.  Calculate metric: <Bid Rate (Overall)> in the dataset
+	3.  Calculate metric: <Bid Rate (Multi)> in the dataset
+	4.  Calculate metric: <Bid Rate (Single)> in the dataset
+	5.  Calculate metric: <Error Rate> in the dataset
+	6.  Calculate metric: <Empty Rate> in the dataset
+	7.  Calculate metric: <Timeout Rate> in the dataset
+	8.  Calculate metric: <Throttled Rate> in the dataset
+	9.  Calculate metric: <Bid CPM USD> in the dataset
+	10.  Calculate metric: <Win CPM (USD)> in the dataset
+	11.  Calculate metric: <Spend CPM (USD)> in the dataset
+	12.  Calculate metric: <% Pub Brand Blocks> in the dataset
+	13.  Calculate metric: <% Unbranded Blocks> in the dataset
+	14.  Calculate metric: <% Multibidding> in the dataset
+	15.  Calculate metric: <% Domain Blocks> in the dataset
+	16.  Calculate metric: <% AQ Type Blocks> in the dataset
+	17.  Calculate metric: <% AQ ECRID Blocks> in the dataset
+	18.  Calculate metric: <% AQ CRID Blocks> in the dataset
+	19.  Calculate metric: <% AQ Attribute Blocks> in the dataset
+	20.  Calculate metric: <% AQ Category Blocks> in the dataset
+	21.  Calculate metric: <% AQ Brand Blocks> in the dataset
+	22.  Calculate metric: <% AQ Language Blocks> in the dataset
+	23.  Calculate metric: <Bids Discarded - AQ cturl> in the dataset
+	24.  Calculate metric: <% AQ cturl Blocks> in the dataset
+	25.  Calculate metric: <% SSL Safe Blocks> in the dataset
+	26.  Calculate metric: <% PMP Buyer Blocks> in the dataset
+	27.  Calculate metric: <% PMP Brand Blocks> in the dataset
+	28.  Calculate metric: <% Bid too high Blocks> in the dataset
+	29.  Calculate metric: <% Currency Conversion Fail Blocks> in the dataset
+	30.  Calculate metric: <% Mutual Exclusion Blocks> in the dataset
+	31.  Calculate metric: <% NURL Invalid Blocks> in the dataset
+	32.  Calculate metric: <% NURL Too Long Blocks> in the dataset
+	33.  Calculate metric: <% Other Blocks> in the dataset
+	34.  Calculate metric: <Bid Rate (Overall - Above Floor)> in the dataset
+	35.  Calculate metric: <Win CPM> in the dataset
+	36.  Calculate metric: <Bid CPM> in the dataset
+	37.  Calculate metric: <Spend CPM> in the dataset
+	38.  Calculate metric: <% Requests Sent with Data> in the dataset
+	39.  Calculate metric: <Win Rate (Billable)> in the dataset
+	40.  Calculate metric: <Total SSRTB Requests Sent (less throttled)> in the view
+	41.  Calculate metric: <Bid Rate (Overall)> in the view
+	42.  Calculate metric: <Bid Rate (Multi)> in the view
+	43.  Calculate metric: <Bid Rate (Single)> in the view
+	44.  Calculate metric: <Error Rate> in the view
+	45.  Calculate metric: <Empty Rate> in the view
+	46.  Calculate metric: <Timeout Rate> in the view
+	47.  Calculate metric: <Throttled Rate> in the view
+	48.  Calculate metric: <Bid CPM USD> in the view
+	49.  Calculate metric: <Win CPM (USD)> in the view
+	50.  Calculate metric: <Spend CPM (USD)> in the view
+	51.  Calculate metric: <% Pub Brand Blocks> in the view
+	52.  Calculate metric: <% Unbranded Blocks> in the view
+	53.  Calculate metric: <% Multibidding> in the view
+	54.  Calculate metric: <% Domain Blocks> in the view
+	55.  Calculate metric: <% AQ Type Blocks> in the view
+	56.  Calculate metric: <% AQ ECRID Blocks> in the view
+	57.  Calculate metric: <% AQ CRID Blocks> in the view
+	58.  Calculate metric: <% AQ Attribute Blocks> in the view
+	59.  Calculate metric: <% AQ Category Blocks> in the view
+	60.  Calculate metric: <% AQ Brand Blocks> in the view
+	61.  Calculate metric: <% AQ Language Blocks> in the view
+	62.  Calculate metric: <Bids Discarded - AQ cturl> in the view
+	63.  Calculate metric: <% AQ cturl Blocks> in the view
+	64.  Calculate metric: <% SSL Safe Blocks> in the view
+	65.  Calculate metric: <% PMP Buyer Blocks> in the view
+	66.  Calculate metric: <% PMP Brand Blocks> in the view
+	67.  Calculate metric: <% Bid too high Blocks> in the view
+	68.  Calculate metric: <% Currency Conversion Fail Blocks> in the view
+	69.  Calculate metric: <% Mutual Exclusion Blocks> in the view
+	70.  Calculate metric: <% NURL Invalid Blocks> in the view
+	71.  Calculate metric: <% NURL Too Long Blocks> in the view
+	72.  Calculate metric: <% Other Blocks> in the view
+	73.  Calculate metric: <Bid Rate (Overall - Above Floor)> in the view
+	74.  Calculate metric: <Win CPM> in the view
+	75.  Calculate metric: <Bid CPM> in the view
+	76.  Calculate metric: <Spend CPM> in the view
+	77.  Calculate metric: <% Requests Sent with Data> in the view
+	78.  Calculate metric: <Win Rate (Billable)> in the view
+	79.  Perform cross-tabbing
+]

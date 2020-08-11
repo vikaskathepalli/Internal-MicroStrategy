@@ -1,0 +1,87 @@
+Tables Accessed:
+DATE_DIM
+DEAL_DIM
+DIM_SITES_TO_OWNERS
+OX_PRIVATE_MARKETPLACE_PACKAGE_ELIGIBILITY_DAILY_FACT
+PACKAGE_DIM
+SITE_DIM
+
+
+SQL Statements:
+CREATE TABLE MSTR_TMP.ZZMQ00 AS 
+select	a11.p_ad_size  CustCol_2,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end  CustCol_62,
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end  is_mobile_app_web,
+	a11.p_eligible_package_id  package_nk,
+	nvl(a11.u_rewritten_url,'')  domain,
+	a11.site_nk  site_nk,
+	a11.utc_date_sid  date_sid
+from	"mstr_datamart"."OX_PRIVATE_MARKETPLACE_PACKAGE_ELIGIBILITY_DAILY_FACT"	a11
+where	to_char(a11.utc_date_sid) between to_char(timestampadd('day', -7, current_timestamp()), 'YYYYMMDD')and to_char(timestampadd('day', -1, current_timestamp()), 'YYYYMMDD')
+group by	a11.p_ad_size,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end,
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end,
+	a11.p_eligible_package_id,
+	nvl(a11.u_rewritten_url,''),
+	a11.site_nk,
+	a11.utc_date_sid
+having	sum(a11.tot_private_market_place_eligibility) > 10000.0
+
+select	a14.package_nk  PACKAGE_NK_2,
+	max(nvl(a14.package_name,'N/A'))  PACKAGE_NAME_2,
+	case when a15.account_name is null then '' else a15.account_name end  account_name,
+	max(a15.ACCOUNT_ID)  sf_account,
+	nvl(a11.u_rewritten_url,'')  domain,
+	a11.utc_date_sid  date_sid,
+	max(a17.DATE)  date_I,
+	a11.site_nk  site_nk,
+	a11.site_nk  site_nk0,
+	max(a16.site_name)  site_name,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end  CustCol_62,
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end  is_mobile_app_web,
+	a11.p_ad_size  CustCol_2,
+	nvl(a13.deal_id,'-1')  external_deal_id,
+	max(a13.deal_id)  deal_id,
+	ifnull(a13.DEAL_NK,-1)  deal_nk,
+	max(a13.deal_id)  deal_id0,
+	a11.p_eligible_package_id  package_nk,
+	max(a14.package_nk)  package_name,
+	sum(a11.tot_private_market_place_eligibility)  WJXBFS1,
+	avg(cast((case when a11.u_viewability_score is null then '0' else a11.u_viewability_score end) as DECIMAL(26,6)))  WJXBFS2
+from	"mstr_datamart"."OX_PRIVATE_MARKETPLACE_PACKAGE_ELIGIBILITY_DAILY_FACT"	a11
+	join	MSTR_TMP.ZZMQ00	pa12
+	  on 	(a11.p_ad_size = pa12.CustCol_2 and 
+	a11.p_eligible_package_id = pa12.package_nk and 
+	a11.site_nk = pa12.site_nk and 
+	a11.utc_date_sid = pa12.date_sid and 
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end = pa12.is_mobile_app_web and 
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end = pa12.P_MAPPED_ADUNIT_TYPE and 
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end = pa12.CustCol_62 and 
+	nvl(a11.u_rewritten_url,'') = pa12.domain)
+	left outer join	"mstr_datamart"."DEAL_DIM"	a13
+	  on 	(a11.p_eligible_package_id = nvl(a13.package_nk,-1))
+	left outer join	"mstr_datamart"."PACKAGE_DIM"	a14
+	  on 	(a11.p_eligible_package_id = nvl(a14.package_nk,-1))
+	left outer join	"mstr_datamart"."DIM_SITES_TO_OWNERS"	a15
+	  on 	(a11.site_nk = CAST(a15.site_nk as BIGINT))
+	left outer join	"mstr_datamart"."SITE_DIM"	a16
+	  on 	(a11.site_nk = a16.site_nk)
+	left outer join	"mstr_datamart"."DATE_DIM"	a17
+	  on 	(a11.utc_date_sid = a17.date_sid)
+where	to_char(a11.utc_date_sid) between to_char(timestampadd('day', -7, current_timestamp()), 'YYYYMMDD')and to_char(timestampadd('day', -1, current_timestamp()), 'YYYYMMDD')
+group by	a14.package_nk,
+	case when a15.account_name is null then '' else a15.account_name end,
+	nvl(a11.u_rewritten_url,''),
+	a11.utc_date_sid,
+	a11.site_nk,
+	a11.site_nk,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end,
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end,
+	a11.p_ad_size,
+	nvl(a13.deal_id,'-1'),
+	ifnull(a13.DEAL_NK,-1),
+	a11.p_eligible_package_id

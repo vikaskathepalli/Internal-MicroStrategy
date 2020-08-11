@@ -1,0 +1,271 @@
+Tables Accessed:
+ADVERTISER_DIM
+AD_UNIT_DIM
+BRAND_DIM
+COUNTRY_DIM
+DATE_DIM
+DEAL_DIM
+DEMAND_PARTNER_DIM
+PACKAGE_DIM
+PLATFORM_DIM
+PMP_DEAL_TYPE_MAPPING_DIM
+PUBLISHER_DIM
+SITE_DIM
+VIEWABILITY_BUYER_BRAND_SUM_DAILY_FACT_VIEW
+
+
+SQL Statements:
+select	a11.P_PLATFORM_ID  x_platform_id,
+	max(a118.PLATFORM_NAME)  PLATFORM_NAME,
+	a11.publisher_account_nk  publisher_account_nk,
+	max(a12.publisher_account_name)  pub_name,
+	a11.advertiser_account_nk  advertiser_account_nk,
+	max(a110.advertiser_account_name)  advertiser_account_name,
+	nvl(a11.deal_nk,'-1')  deal_nk,
+	max(case when a14.DEAL_NK=-1 then null else a14.DEAL_NK end)  deal_nk0,
+	nvl(a14.deal_name,'-1')  deal_name,
+	max(a14.deal_name)  deal_name0,
+	a11.pmp_deal_type  pmp_deal_type,
+	max(a116.pmp_deal_type_name)  pmp_deal_type_name,
+	a11.start_date  start_date,
+	a11.end_date  start_date0,
+	case when a14.deleted  = 'true' then 'Deleted' else a14.status end   CustCol_2,
+	case when a14.deal_source is null then '' else a14.deal_source end  deal_source,
+	nvl(a14.deal_id,'-1')  external_deal_id,
+	max(a14.deal_id)  deal_id,
+	case when a14.has_multiple_publishers='True' then 'Multi-pub' else 'Single Pub' end  has_multiple_publishers,
+	nvl(coalesce(a11.deal_nk,a11.X_GD_DEAL_ID),-1)  CustCol_85,
+	max(coalesce(a11.deal_nk,a11.X_GD_DEAL_ID))  CustCol_92,
+	nvl(a13.deal_name,'-1')  CustCol_850,
+	max(a13.deal_name)  deal_name1,
+	nvl(coalesce(a11.package_nk,a11.X_GD_PACKAGE_ID),-1)  package_nk,
+	max(coalesce(a11.package_nk,a11.X_GD_PACKAGE_ID))  CustCol_93,
+	nvl(coalesce(a11.package_nk,a11.X_GD_PACKAGE_ID),-1)  package_nk0,
+	max(a115.package_name)  package_name,
+	a13.deal_id  deal_id0,
+	a11.ad_unit_nk  ad_unit_nk,
+	a11.ad_unit_nk  ad_unit_nk0,
+	max(a16.ad_unit_name)  ad_unit_name,
+	nvl(a11.BRAND_NK,'-1')  brand_id,
+	nvl(a11.BRAND_NK,'-1')  brand_id0,
+	max(a17.brand_name)  brand_name,
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' when a11.X_BIDDER_ELIG IS NULL then '' else cast(a11.X_BIDDER_ELIG as varchar(10)) end  x_bidder_elig,
+	Case when a11.deal_nk is null and a11.x_gd_deal_id is null  then 'Exchange'   when a11.deal_nk is null and a11.x_gd_deal_id is not null then 'TE'  when a11.deal_nk is not null and a11.pmp_deal_type=4  then 'RTG'  else 'PMP' end  BidRequestType,
+	a12.BUSINESS_CLIENT  BUSINESS_CLIENT,
+	nvl(a11.partner_buyer_id,'')  partner_buyer_id,
+	a11.advertiser_account_nk  advertiser_account_nk0,
+	max(a18.buyer_id)  buyer_id,
+	nvl(a11.partner_buyer_id,'')  partner_buyer_id0,
+	a11.advertiser_account_nk  advertiser_account_nk1,
+	max(a18.buyer_name)  buyer_name,
+	nvl(a11.COUNTRY_CODE,'')  COUNTRY_CODE,
+	nvl(a11.COUNTRY_CODE,'')  COUNTRY_CODE0,
+	max(a19.COUNTRY_NAME)  COUNTRY_NAME,
+	nvl(a11.domain,'')  domain,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	concat(concat(concat(concat(date_part('month',a14.CREATED_DATETIME),'/'),date_part('day',a14.CREATED_DATETIME)),'/'),date_part('year',a14.CREATED_DATETIME))  created_date,
+	a11.lifetime_impression_goal  lifetime_impression_goal,
+	a11.A_CURRENCY_CODE  a_coin,
+	a11.advertiser_account_nk  advertiser_account_nk2,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end  CustCol_62,
+	case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end  X_GD_DEAL_ID,
+	max(case when a15.DEAL_NK=-1 then null else a15.DEAL_NK end)  CustCol_69,
+	case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end  X_GD_DEAL_ID0,
+	max(a15.deal_name)  deal_name2,
+	a15.deal_id  deal_id1,
+	case when a11.X_GD_PACKAGE_ID is null then -1 else a11.X_GD_PACKAGE_ID end  package_nk1,
+	max(case when a111.package_nk=-1 then null else a111.package_nk end)  CustCol_72,
+	case when a11.X_GD_PACKAGE_ID is null then -1 else a11.X_GD_PACKAGE_ID end  package_nk2,
+	max(a111.package_name)  CustCol_720,
+	case when a11.X_GD_PLATFORM_ID is null then '' else a11.X_GD_PLATFORM_ID end  X_GD_PLATFORM_ID,
+	case when a11.X_GD_PLATFORM_ID is null then '' else a11.X_GD_PLATFORM_ID end  X_GD_PLATFORM_ID0,
+	max(a112.PLATFORM_NAME)  PLATFORM_NAME0,
+	a11.INSTANCE_DATE_SID  INSTANCE_DATE_SID,
+	max(a113.DATE)  date_I,
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end  is_mobile_app_web,
+	case when a11.package_nk is null then -1 else a11.package_nk end  package_nk3,
+	max(CASE WHEN a114.package_nk =-1 THEN 'N/A'  WHEN a114.package_nk  is null THEN 'N/A' else to_char(a114.package_nk)end)  package_name0,
+	case when a11.package_nk is null then -1 else a11.package_nk end  PACKAGE_NK_2,
+	max(nvl(a114.package_name,'N/A'))  PACKAGE_NAME_2,
+	nvl(a11.partner_buyer_id,'')  partner_buyer_id1,
+	case when a12.pmp_read = 1 then 'True' else 'False' end  CustCol_101,
+	case when a11.P_ADUNIT_PRESENTATION_FORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_FORMAT end  P_ADUNIT_PRESENTATION_FORMAT,
+	case when a11.P_ADUNIT_PRESENTATION_SUBFORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_SUBFORMAT end  P_ADUNIT_PRESENTATION_SUBFORMAT,
+	a11.p_ad_size  p_ad_sizes,
+	a11.P_CURRENCY_CODE  currency_code,
+	nvl(concat(cast(a11.p_deal_floor as Numeric(10,2)), ''), '-1')  p_deal_floor,
+	nvl(concat(cast(a11.p_deal_floor_usd as Numeric(10,2)), ''), '-1')  p_deal_floor_usd,
+	a11.p_medium  p_medium,
+	a11.publisher_account_nk  publisher_account_nk0,
+	a11.P_PLATFORM_ID  x_platform_id0,
+	case when a11.DEAL_WIN_TYPE is null then 'EXCHANGE' when a11.DEAL_WIN_TYPE = 'DIDIE' then 'TE' else a11.DEAL_WIN_TYPE end  DEAL_WIN_TYPE,
+	a11.site_nk  site_nk,
+	a16.site_nk  site_nk0,
+	max(a117.site_name)  site_name,
+	sum(a11.tot_a_mkt_spend_usd)  WJXBFS1,
+	sum(a11.tot_bid_requests)  WJXBFS2,
+	sum(a11.tot_opportunities)  WJXBFS3,
+	sum(a11.tot_pos_bid_opportunities)  WJXBFS4,
+	sum(a11.tot_mkt_impressions)  WJXBFS5,
+	sum(a11.tot_p_mkt_revenue)  WJXBFS6,
+	sum(a11.tot_p_mkt_revenue_usd)  WJXBFS7,
+	sum(a11.tot_a_mkt_spend)  WJXBFS8,
+	max((Datediff(Day,To_date(a11.start_date),case when To_date(a11.end_date)<CURRENT_DATE then To_date(a11.end_date) else CURRENT_DATE end) + 1))  WJXBFS9,
+	sum(a11.tot_view_measurables_moat)  WJXBFSa,
+	max(a11.lifetime_impression_goal)  WJXBFSb,
+	sum(a11.tot_total_winning_bid_gross_usd)  WJXBFSc,
+	sum(a11.tot_viewables_moat)  WJXBFSd,
+	sum(a11.tot_total_winning_bid_net)  WJXBFSe,
+	sum(a11.tot_bid_requests)  WJXBFSf,
+	max(Datediff(Day,To_date(a11.start_date),To_date(a11.end_date)))  WJXBFS10,
+	sum(a11.tot_total_winning_bid_gross)  WJXBFS11,
+	sum(a11.tot_total_pos_bid_gross_usd)  WJXBFS12,
+	sum(a11.tot_total_winning_bid_net_usd)  WJXBFS13,
+	sum(a11.tot_total_pos_bid_gross)  WJXBFS14
+from	"mstr_datamart"."VIEWABILITY_BUYER_BRAND_SUM_DAILY_FACT_VIEW"	a11
+	left outer join	"mstr_datamart"."PUBLISHER_DIM"	a12
+	  on 	(a11.publisher_account_nk = a12.publisher_account_nk)
+	left outer join	"mstr_datamart"."DEAL_DIM"	a13
+	  on 	(nvl(coalesce(a11.deal_nk,a11.X_GD_DEAL_ID),-1) = nvl(a13.DEAL_NK,-1))
+	left outer join	"mstr_datamart"."DEAL_DIM"	a14
+	  on 	(nvl(a11.deal_nk,'-1') = nvl(a14.DEAL_NK,'-1'))
+	left outer join	"mstr_datamart"."DEAL_DIM"	a15
+	  on 	(case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end = case when a15.DEAL_NK is null then -1 else a15.DEAL_NK end)
+	left outer join	"mstr_datamart"."AD_UNIT_DIM"	a16
+	  on 	(a11.ad_unit_nk = a16.ad_unit_nk)
+	left outer join	"mstr_datamart"."BRAND_DIM"	a17
+	  on 	(nvl(a11.BRAND_NK,'-1') = a17.BRAND_NK)
+	left outer join	"mstr_datamart"."DEMAND_PARTNER_DIM"	a18
+	  on 	(a11.advertiser_account_nk = a18.advertiser_account_nk and 
+	ifnull(a11.partner_buyer_id,'') = ifnull(a18.partner_buyer_id,'') and 
+	nvl(a11.partner_buyer_id,'') = nvl(a18.partner_buyer_id,''))
+	left outer join	"mstr_datamart"."COUNTRY_DIM"	a19
+	  on 	(nvl(a11.COUNTRY_CODE,'') = a19.COUNTRY_CODE)
+	left outer join	"mstr_datamart"."ADVERTISER_DIM"	a110
+	  on 	(a11.advertiser_account_nk = a110.advertiser_account_nk)
+	left outer join	"mstr_datamart"."PACKAGE_DIM"	a111
+	  on 	(case when a11.X_GD_PACKAGE_ID is null then -1 else a11.X_GD_PACKAGE_ID end = case when a111.package_nk is null then -1 else a111.package_nk end)
+	left outer join	"mstr_datamart"."PLATFORM_DIM"	a112
+	  on 	(case when a11.X_GD_PLATFORM_ID is null then '' else a11.X_GD_PLATFORM_ID end = case when a112.platform_id is null then '' else a112.platform_id end)
+	left outer join	"mstr_datamart"."DATE_DIM"	a113
+	  on 	(a11.INSTANCE_DATE_SID = a113.date_sid)
+	left outer join	"mstr_datamart"."PACKAGE_DIM"	a114
+	  on 	(case when a11.package_nk is null then -1 else a11.package_nk end = nvl(a114.package_nk,-1) and 
+	nvl(a14.package_nk,-1) = nvl(a114.package_nk,-1))
+	left outer join	"mstr_datamart"."PACKAGE_DIM"	a115
+	  on 	(nvl(coalesce(a11.package_nk,a11.X_GD_PACKAGE_ID),-1) = a115.package_nk)
+	left outer join	"mstr_datamart"."PMP_DEAL_TYPE_MAPPING_DIM"	a116
+	  on 	(a11.pmp_deal_type = a116.pmp_deal_type)
+	left outer join	"mstr_datamart"."SITE_DIM"	a117
+	  on 	(a16.site_nk = a117.site_nk)
+	left outer join	"mstr_datamart"."PLATFORM_DIM"	a118
+	  on 	(a11.P_PLATFORM_ID = a118.platform_id and 
+	a12.platform_id = a118.platform_id)
+where	(to_char(a11.INSTANCE_DATE_SID) between to_char(to_date('08/10/2020'),'YYYYMMDD') and to_char(to_date('08/10/2020'),'YYYYMMDD')
+ and (a11.pmp_deal_type<>4 and nvl(a11.deal_nk,'-1') <>-1
+ or a11.pmp_deal_type=4 and nvl(a11.deal_nk,'-1') <>-1
+ or case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end<>-1 and nvl(a11.deal_nk,'-1') =-1
+ or case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end=-1 and nvl(a11.deal_nk,'-1') =-1))
+group by	a11.P_PLATFORM_ID,
+	a11.publisher_account_nk,
+	a11.advertiser_account_nk,
+	nvl(a11.deal_nk,'-1'),
+	nvl(a14.deal_name,'-1'),
+	a11.pmp_deal_type,
+	a11.start_date,
+	a11.end_date,
+	case when a14.deleted  = 'true' then 'Deleted' else a14.status end ,
+	case when a14.deal_source is null then '' else a14.deal_source end,
+	nvl(a14.deal_id,'-1'),
+	case when a14.has_multiple_publishers='True' then 'Multi-pub' else 'Single Pub' end,
+	nvl(coalesce(a11.deal_nk,a11.X_GD_DEAL_ID),-1),
+	nvl(a13.deal_name,'-1'),
+	nvl(coalesce(a11.package_nk,a11.X_GD_PACKAGE_ID),-1),
+	nvl(coalesce(a11.package_nk,a11.X_GD_PACKAGE_ID),-1),
+	a13.deal_id,
+	a11.ad_unit_nk,
+	a11.ad_unit_nk,
+	nvl(a11.BRAND_NK,'-1'),
+	nvl(a11.BRAND_NK,'-1'),
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' when a11.X_BIDDER_ELIG IS NULL then '' else cast(a11.X_BIDDER_ELIG as varchar(10)) end,
+	Case when a11.deal_nk is null and a11.x_gd_deal_id is null  then 'Exchange'   when a11.deal_nk is null and a11.x_gd_deal_id is not null then 'TE'  when a11.deal_nk is not null and a11.pmp_deal_type=4  then 'RTG'  else 'PMP' end,
+	a12.BUSINESS_CLIENT,
+	nvl(a11.partner_buyer_id,''),
+	a11.advertiser_account_nk,
+	nvl(a11.partner_buyer_id,''),
+	a11.advertiser_account_nk,
+	nvl(a11.COUNTRY_CODE,''),
+	nvl(a11.COUNTRY_CODE,''),
+	nvl(a11.domain,''),
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	concat(concat(concat(concat(date_part('month',a14.CREATED_DATETIME),'/'),date_part('day',a14.CREATED_DATETIME)),'/'),date_part('year',a14.CREATED_DATETIME)),
+	a11.lifetime_impression_goal,
+	a11.A_CURRENCY_CODE,
+	a11.advertiser_account_nk,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end,
+	case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end,
+	case when a11.X_GD_DEAL_ID is null then -1 else a11.X_GD_DEAL_ID end,
+	a15.deal_id,
+	case when a11.X_GD_PACKAGE_ID is null then -1 else a11.X_GD_PACKAGE_ID end,
+	case when a11.X_GD_PACKAGE_ID is null then -1 else a11.X_GD_PACKAGE_ID end,
+	case when a11.X_GD_PLATFORM_ID is null then '' else a11.X_GD_PLATFORM_ID end,
+	case when a11.X_GD_PLATFORM_ID is null then '' else a11.X_GD_PLATFORM_ID end,
+	a11.INSTANCE_DATE_SID,
+	case when a11.IS_MOBILE_APP = 1 then 'true'  when a11.IS_MOBILE_APP is null then '' else 'false' end,
+	case when a11.package_nk is null then -1 else a11.package_nk end,
+	case when a11.package_nk is null then -1 else a11.package_nk end,
+	nvl(a11.partner_buyer_id,''),
+	case when a12.pmp_read = 1 then 'True' else 'False' end,
+	case when a11.P_ADUNIT_PRESENTATION_FORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_FORMAT end,
+	case when a11.P_ADUNIT_PRESENTATION_SUBFORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_SUBFORMAT end,
+	a11.p_ad_size,
+	a11.P_CURRENCY_CODE,
+	nvl(concat(cast(a11.p_deal_floor as Numeric(10,2)), ''), '-1'),
+	nvl(concat(cast(a11.p_deal_floor_usd as Numeric(10,2)), ''), '-1'),
+	a11.p_medium,
+	a11.publisher_account_nk,
+	a11.P_PLATFORM_ID,
+	case when a11.DEAL_WIN_TYPE is null then 'EXCHANGE' when a11.DEAL_WIN_TYPE = 'DIDIE' then 'TE' else a11.DEAL_WIN_TYPE end,
+	a11.site_nk,
+	a16.site_nk
+
+
+[Analytical engine calculation steps:
+	1.  Calculate metric: <Eligibility Rate> in the dataset
+	2.  Calculate metric: <Bid Rate> in the dataset
+	3.  Calculate metric: <Win Rate> in the dataset
+	4.  Calculate metric: <Spend CPM USD> in the dataset
+	5.  Calculate metric: <Bid CPM USD (Gross)> in the dataset
+	6.  Calculate metric: <Win CPM USD (Gross)> in the dataset
+	7.  Calculate metric: <Bid CPM (Gross)> in the dataset
+	8.  Calculate metric: <Bid CPM (net)> in the dataset
+	9.  Calculate metric: <Bid CPM USD (net)> in the dataset
+	10.  Calculate metric: <Revenue eCPM> in the dataset
+	11.  Calculate metric: <Revenue CPM USD> in the dataset
+	12.  Calculate metric: <Spend eCPM> in the dataset
+	13.  Calculate metric: <Win CPM (Gross)> in the dataset
+	14.  Calculate metric: <Win CPM (net)> in the dataset
+	15.  Calculate metric: <Win CPM USD (net)> in the dataset
+	16.  Calculate metric: <Viewability score> in the dataset
+	17.  Calculate metric: <Deal Request Completion Rate> in the dataset
+	18.  Calculate metric: <Deal Request Pacing %> in the dataset
+	19.  Calculate metric: <Eligibility Rate> in the view
+	20.  Calculate metric: <Bid Rate> in the view
+	21.  Calculate metric: <Win Rate> in the view
+	22.  Calculate metric: <Spend CPM USD> in the view
+	23.  Calculate metric: <Bid CPM USD (Gross)> in the view
+	24.  Calculate metric: <Win CPM USD (Gross)> in the view
+	25.  Calculate metric: <Bid CPM (Gross)> in the view
+	26.  Calculate metric: <Bid CPM (net)> in the view
+	27.  Calculate metric: <Bid CPM USD (net)> in the view
+	28.  Calculate metric: <Revenue eCPM> in the view
+	29.  Calculate metric: <Revenue CPM USD> in the view
+	30.  Calculate metric: <Spend eCPM> in the view
+	31.  Calculate metric: <Win CPM (Gross)> in the view
+	32.  Calculate metric: <Win CPM (net)> in the view
+	33.  Calculate metric: <Win CPM USD (net)> in the view
+	34.  Calculate metric: <Viewability score> in the view
+	35.  Calculate metric: <Deal Request Completion Rate> in the view
+	36.  Calculate metric: <Deal Request Pacing %> in the view
+	37.  Perform cross-tabbing
+]

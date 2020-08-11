@@ -1,0 +1,139 @@
+Tables Accessed:
+ADVERTISER_DIM
+BRAND_DIM
+DATE_DIM
+DEMAND_PARTNER_DIM
+MARKET_CATEGORY_DIM
+OX_DEMAND_BUYER_BRAND_SUM_DAILY_FACT
+PUBLISHER_DIM
+SITE_DIM
+
+
+SQL Statements:
+select	a11.utc_date_sid  date_sid,
+	a19.DATE  date_I,
+	a11.advertiser_account_nk  advertiser_account_nk,
+	a18.advertiser_account_name  advertiser_account_name,
+	a11.advertiser_account_nk  advertiser_account_nk0,
+	ifnull(a11.partner_buyer_id,'')  partner_buyer_id,
+	a11.advertiser_account_nk  advertiser_account_nk1,
+	a15.buyer_name  buyer_name,
+	nvl(a11.BRAND_NK,-1)  brand_id,
+	a14.brand_name  brand_name,
+	a12.publisher_account_nk  publisher_account_nk,
+	a13.publisher_account_name  pub_name,
+	a11.A_CURRENCY_CODE  a_coin,
+	nvl(a11.BRAND_NK,-1)  brand_id0,
+	a11.p_domain  domain,
+	a12.publisher_account_nk  publisher_account_nk0,
+	a11.site_nk  site_nk,
+	a11.site_nk  site_nk0,
+	a12.site_name  site_name,
+	ifnull(a11.partner_buyer_id,'')  partner_buyer_id0,
+	a11.advertiser_account_nk  advertiser_account_nk2,
+	a15.buyer_id  buyer_id,
+	nvl(a11.partner_buyer_id,'')  partner_buyer_id1,
+	nvl(a11.category1,-99)  category1,
+	a16.category_name  category1_description,
+	ifnull(a11.category2,-99)  category2,
+	a17.category_name  category2_description,
+	a11.P_REQ_DELIV_MEDIUM  P_REQ_DELIV_MEDIUM,
+	a13.BUSINESS_CLIENT  BUSINESS_CLIENT,
+	ifnull(a11.COUNTRY_CODE,'')  COUNTRY_CODE,
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' else  cast(a11.X_BIDDER_ELIG as varchar(10)) end  x_bidder_elig,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when a11.P_ADUNIT_PRESENTATION_FORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_FORMAT end  P_ADUNIT_PRESENTATION_FORMAT,
+	case when a11.P_ADUNIT_PRESENTATION_SUBFORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_SUBFORMAT end  P_ADUNIT_PRESENTATION_SUBFORMAT,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end  CustCol_62,
+	case when a11.is_mobile_app = 1 then 'true'  when a11.is_mobile_app is null then '' else 'false' end  is_mobile_app_web,
+	sum(a11.TOT_BILLABLE_IMPRESSIONS)  WJXBFS1,
+	COALESCE(sum(a11.tot_advertiser_bid_spend_usd), 0)  WJXBFS2,
+	sum(a11.tot_non_zero_count)  WJXBFS3,
+	sum(a11.tot_advertiser_bid_spend)  WJXBFS4,
+	sum(a11.tot_winning_bids_sum)  WJXBFS5,
+	sum(a11.tot_self_compete_sum_usd)  WJXBFS6,
+	sum(a11.tot_blocked_brand_count)  WJXBFS7,
+	sum(a11.tot_non_zero_sum)  WJXBFS8,
+	sum(a11.tot_blocked_unbranded_count)  WJXBFS9,
+	sum(a11.tot_winning_bids_count)  WJXBFSa,
+	sum(a11.tot_blocked_brand_sum)  WJXBFSb,
+	sum(a11.tot_self_compete_sum)  WJXBFSc,
+	sum(a11.tot_self_compete_count)  WJXBFSd,
+	sum(a11.tot_blocked_brand_sum_usd)  WJXBFSe,
+	sum(a11.tot_blocked_unbranded_sum_usd)  WJXBFSf,
+	sum(a11.tot_blocked_unbranded_sum)  WJXBFS10,
+	sum(a11.tot_winning_bids_sum_usd)  WJXBFS11,
+	sum(a11.tot_non_zero_sum_usd)  WJXBFS12
+from	"mstr_datamart"."OX_DEMAND_BUYER_BRAND_SUM_DAILY_FACT"	a11
+	left outer join	"mstr_datamart"."SITE_DIM"	a12
+	  on 	(a11.site_nk = a12.site_nk)
+	left outer join	"mstr_datamart"."PUBLISHER_DIM"	a13
+	  on 	(a12.publisher_account_nk = a13.publisher_account_nk)
+	left outer join	"mstr_datamart"."BRAND_DIM"	a14
+	  on 	(nvl(a11.BRAND_NK,-1) = a14.BRAND_NK)
+	left outer join	"mstr_datamart"."DEMAND_PARTNER_DIM"	a15
+	  on 	(a11.advertiser_account_nk = a15.advertiser_account_nk and 
+	ifnull(a11.partner_buyer_id,'') = ifnull(a15.partner_buyer_id,'') and 
+	ifnull(a11.partner_buyer_id,'') = nvl(a15.partner_buyer_id,'') and 
+	nvl(a11.partner_buyer_id,'') = nvl(a15.partner_buyer_id,''))
+	left outer join	"mstr_datamart"."MARKET_CATEGORY_DIM"	a16
+	  on 	(nvl(a11.category1,-99) = a16.category_nk)
+	left outer join	"mstr_datamart"."MARKET_CATEGORY_DIM"	a17
+	  on 	(ifnull(a11.category2,-99) = a17.category_nk)
+	left outer join	"mstr_datamart"."ADVERTISER_DIM"	a18
+	  on 	(a11.advertiser_account_nk = a18.advertiser_account_nk)
+	left outer join	"mstr_datamart"."DATE_DIM"	a19
+	  on 	(a11.utc_date_sid = a19.date_sid)
+where	(a11.utc_date_sid between 20200804 and 20200810
+ and (a11.advertiser_account_nk = 537072400 and ifnull(a11.partner_buyer_id,'') = '10396'))
+group by	a11.utc_date_sid,
+	a19.DATE,
+	a11.advertiser_account_nk,
+	a18.advertiser_account_name,
+	a11.advertiser_account_nk,
+	ifnull(a11.partner_buyer_id,''),
+	a11.advertiser_account_nk,
+	a15.buyer_name,
+	nvl(a11.BRAND_NK,-1),
+	a14.brand_name,
+	a12.publisher_account_nk,
+	a13.publisher_account_name,
+	a11.A_CURRENCY_CODE,
+	nvl(a11.BRAND_NK,-1),
+	a11.p_domain,
+	a12.publisher_account_nk,
+	a11.site_nk,
+	a11.site_nk,
+	a12.site_name,
+	ifnull(a11.partner_buyer_id,''),
+	a11.advertiser_account_nk,
+	a15.buyer_id,
+	nvl(a11.partner_buyer_id,''),
+	nvl(a11.category1,-99),
+	a16.category_name,
+	ifnull(a11.category2,-99),
+	a17.category_name,
+	a11.P_REQ_DELIV_MEDIUM,
+	a13.BUSINESS_CLIENT,
+	ifnull(a11.COUNTRY_CODE,''),
+	case when a11.X_BIDDER_ELIG = 1 then 'true' when a11.X_BIDDER_ELIG = 0 then 'false' else  cast(a11.X_BIDDER_ELIG as varchar(10)) end,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when a11.P_ADUNIT_PRESENTATION_FORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_FORMAT end,
+	case when a11.P_ADUNIT_PRESENTATION_SUBFORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_SUBFORMAT end,
+	case when lower(a11.U_MOBL_DEV_CAT) ='desktop' then 'Desktop' when lower(a11.U_MOBL_DEV_CAT) in ('mobile','phone','tablet','text') then 'Mobile' when a11.U_MOBL_DEV_CAT is null then '' else a11.U_MOBL_DEV_CAT end,
+	case when a11.is_mobile_app = 1 then 'true'  when a11.is_mobile_app is null then '' else 'false' end
+
+
+[Analytical engine calculation steps:
+	1.  Calculate metric: <Bids (Valid, Non Zero)>
+	2.  Calculate metric: <Win Rate>
+	3.  Calculate metric: <Win CPM USD>
+	4.  Calculate metric: <Spend CPM USD>
+	5.  Calculate metric: <Bid CPM (Non Zero)>
+	6.  Calculate metric: <Bid CPM (Valid, Nonzero)>
+	7.  Calculate metric: <Bid CPM USD (Non Zero)>
+	8.  Calculate metric: <Bid CPM USD (Valid, Nonzero)>
+	9.  Calculate metric: <Spend CPM>
+	10.  Calculate metric: <Win CPM>
+	11.  Perform cross-tabbing
+]

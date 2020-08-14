@@ -1,0 +1,102 @@
+Tables Accessed:
+ADVERTISER_DIM
+COUNTRY_DIM
+DATE_DIM
+MARKET_CATEGORY_DIM
+OX_TRANSACTION_SUM_DAILY_FACT
+PUBLISHER_DIM
+SF_ACCOUNT
+SF_PRODUCT__C
+SF_SITE__C
+SITE_DIM
+
+
+SQL Statements:
+select	a11.utc_date_sid  date_sid,
+	max(a111.DATE)  date_I,
+	CAST (a11.site_nk as varchar)  site_nk,
+	CAST (a11.site_nk as varchar)  site_nk0,
+	max(a110.site_name)  site_name,
+	a13.Account__c  NAME,
+	a13.Account__c  NAME1,
+	max(a19.NAME)  NAME2,
+	a11.publisher_account_nk  publisher_account_nk,
+	a11.publisher_account_nk  publisher_account_nk0,
+	max(a18.publisher_account_name)  pub_name,
+	a11.advertiser_account_nk  advertiser_account_nk,
+	a11.advertiser_account_nk  advertiser_account_nk0,
+	max(a17.advertiser_account_name)  advertiser_account_name,
+	nvl(a11.category1,-99)  category1,
+	max(a14.category_name)  category1_description,
+	nvl(a11.category2,'-99')  category2,
+	max(a15.category_name)  category2_description,
+	a11.p_op_coin  p_op_coin,
+	nvl(a11.COUNTRY_CODE,'')  COUNTRY_CODE,
+	a11.COUNTRY_CODE  COUNTRY_CODE0,
+	max(a16.COUNTRY_NAME)  COUNTRY_NAME,
+	nvl(a11.domain,'')  domain,
+	case when a11.x_bidder_elig = 1 then 'true' when a11.x_bidder_elig = 0 then 'false' else  cast(a11.x_bidder_elig as varchar(10)) end  x_bidder_elig,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end  P_MAPPED_ADUNIT_TYPE,
+	case when a11.P_ADUNIT_PRESENTATION_FORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_FORMAT end  P_ADUNIT_PRESENTATION_FORMAT,
+	case when a11.P_ADUNIT_PRESENTATION_SUBFORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_SUBFORMAT end  P_ADUNIT_PRESENTATION_SUBFORMAT,
+	case when lower(a11.u_mobl_dev_cat) ='desktop' then 'Desktop' when lower(a11.u_mobl_dev_cat) in ('mobile','phone','tablet','text') then 'Mobile' when a11.u_mobl_dev_cat is null then '' else a11.u_mobl_dev_cat end  CustCol_62,
+	case when a11.is_mobile_app = 1 then 'true'  when a11.is_mobile_app is null then '' else 'false' end  is_mobile_app_web,
+	COALESCE(sum(Case when is_mkt=1 then a11.TOT_IMPRESSIONS else 0 end), 0)  WJXBFS1,
+	COALESCE(sum(a11.tot_mkt_req), 0)  WJXBFS2,
+	COALESCE(sum(a11.tot_auctions), 0)  WJXBFS3,
+	COALESCE(sum(a11.tot_clicks), 0)  WJXBFS4,
+	COALESCE(sum(case when is_mkt=1 then a11.TOT_USD_A_SPEND else 0 end), 0)  WJXBFS5
+from	"mstr_datamart"."OX_TRANSACTION_SUM_DAILY_FACT"	a11
+	left outer join	"mstr_datamart"."SF_SITE__C"	a12
+	  on 	(CAST (a11.site_nk as varchar) = a12.SiteID__c)
+	left outer join	"mstr_datamart"."SF_PRODUCT__C"	a13
+	  on 	(a12.Product__c = a13.ID)
+	left outer join	"mstr_datamart"."MARKET_CATEGORY_DIM"	a14
+	  on 	(nvl(a11.category1,-99) = a14.category_nk)
+	left outer join	"mstr_datamart"."MARKET_CATEGORY_DIM"	a15
+	  on 	(nvl(a11.category2,'-99') = a15.category_nk)
+	left outer join	"mstr_datamart"."COUNTRY_DIM"	a16
+	  on 	(a11.COUNTRY_CODE = a16.COUNTRY_CODE and 
+	nvl(a11.COUNTRY_CODE,'') = a16.COUNTRY_CODE)
+	left outer join	"mstr_datamart"."ADVERTISER_DIM"	a17
+	  on 	(a11.advertiser_account_nk = a17.advertiser_account_nk)
+	left outer join	"mstr_datamart"."PUBLISHER_DIM"	a18
+	  on 	(a11.publisher_account_nk = a18.publisher_account_nk)
+	left outer join	"mstr_datamart"."SF_ACCOUNT"	a19
+	  on 	(a13.Account__c = a19.ID)
+	left outer join	"mstr_datamart"."SITE_DIM"	a110
+	  on 	(CAST (a11.site_nk as varchar) = CAST (a110.site_nk as varchar))
+	left outer join	"mstr_datamart"."DATE_DIM"	a111
+	  on 	(a11.utc_date_sid = a111.date_sid)
+where	(a111.DATE between '08/12/2020' and '08/13/2020'
+ and a11.publisher_account_nk in (537084949))
+group by	a11.utc_date_sid,
+	CAST (a11.site_nk as varchar),
+	CAST (a11.site_nk as varchar),
+	a13.Account__c,
+	a13.Account__c,
+	a11.publisher_account_nk,
+	a11.publisher_account_nk,
+	a11.advertiser_account_nk,
+	a11.advertiser_account_nk,
+	nvl(a11.category1,-99),
+	nvl(a11.category2,'-99'),
+	a11.p_op_coin,
+	nvl(a11.COUNTRY_CODE,''),
+	a11.COUNTRY_CODE,
+	nvl(a11.domain,''),
+	case when a11.x_bidder_elig = 1 then 'true' when a11.x_bidder_elig = 0 then 'false' else  cast(a11.x_bidder_elig as varchar(10)) end,
+	case when a11.P_MAPPED_ADUNIT_TYPE is null then '' else a11.P_MAPPED_ADUNIT_TYPE end,
+	case when a11.P_ADUNIT_PRESENTATION_FORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_FORMAT end,
+	case when a11.P_ADUNIT_PRESENTATION_SUBFORMAT is null then '' else a11.P_ADUNIT_PRESENTATION_SUBFORMAT end,
+	case when lower(a11.u_mobl_dev_cat) ='desktop' then 'Desktop' when lower(a11.u_mobl_dev_cat) in ('mobile','phone','tablet','text') then 'Mobile' when a11.u_mobl_dev_cat is null then '' else a11.u_mobl_dev_cat end,
+	case when a11.is_mobile_app = 1 then 'true'  when a11.is_mobile_app is null then '' else 'false' end
+
+
+[Analytical engine calculation steps:
+	1.  Calculate metric: <Market Unbill> in the dataset
+	2.  Calculate metric: <CPM> in the dataset
+	3.  Calculate metric: <Market Unbill> in the view
+	4.  Calculate metric: <CPM> in the view
+	5.  Perform cross-tabbing
+]
